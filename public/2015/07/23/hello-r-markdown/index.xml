@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Hello R Markdown on Tanushree Nori&#39;s Blog</title>
+    <link>/2015/07/23/hello-r-markdown/</link>
+    <description>Recent content in Hello R Markdown on Tanushree Nori&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Thu, 23 Jul 2015 21:13:14 -0500</lastBuildDate>
+    
+	<atom:link href="/2015/07/23/hello-r-markdown/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+  </channel>
+</rss>
