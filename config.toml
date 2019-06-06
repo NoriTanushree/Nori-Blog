@@ -7,7 +7,7 @@ author = "Sai Tanushree Nori"
 googleAnalytics = ""
 defaultContentLanguage = "en"
 language = "en-US"
-paginate = 3 # Number of posts per page
+paginate = 4 # Number of posts per page
 #ignore the following file formats in the public folder
 ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 
@@ -26,11 +26,8 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 [params.hero]
     textColor = "" # Empty for default color
 
-[params.cta] # Call To Action 
-    show = true
-    cta = "Contact"
-    link = "contact" # Relative URL
 
+  
 [params.separator] # Separators between sections on the home page
     show = false
 

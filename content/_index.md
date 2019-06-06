@@ -10,4 +10,4 @@ weight: 1
 
 # Hi!
 ## I am Tanushree Nori, a Data Scientist. 
-## This is my blog on applied data science & various related topics
+## This is my blog with my applied data science projects

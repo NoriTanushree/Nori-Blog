@@ -3,7 +3,7 @@ description: ""
 draft: false
 images: []
 menu: main
-title: About
+title: Courses
 weight: 3
 ---
 
