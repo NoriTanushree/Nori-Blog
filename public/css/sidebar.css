@@ -1,0 +1,17 @@
+#sidebar .sidebar-profile .sidebar-profile-name
+{
+    color: #303030;
+}
+#sidebar ul.sidebar-buttons li.sidebar-button .sidebar-button-link
+{
+    color: #202020;
+}
+@media only screen and (min-width: 1280px)
+{
+  #sidebar[data-behavior="1"] .sidebar-profile .sidebar-profile-bio,
+  #sidebar[data-behavior="1"] .sidebar-profile .sidebar-profile-job,
+  #sidebar[data-behavior="1"] .sidebar-profile .sidebar-profile-location 
+  {
+    color: #202020;
+  }
+}

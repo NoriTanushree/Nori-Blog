@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.55.6 with theme Tranquilpeak 0.4.3-SNAPSHOT">
+<meta name="author" content="Sai Tanushree Nori">
+<meta name="keywords" content="tech, R">
+<meta name="description" content="Time Series Analysis Apart from exploring the patterns of change in climate data we also wanted to predict and benchmark temperatures using several types of time series forecast models.
+Why time series forecasting?
+Because climate data is heavily time-dependent and has naturally temporal ordering, we can use previously observed values to predict future values
+We will try and predict temperatures in NYC
+Data Import
+ggplot(GlobalTemp_NYC[GlobalTemp_NYC$dt &gt;= as.Date(&quot;1950-01-01&quot;),] , aes(dt, AverageTemperature)) &#43; geom_line() &#43; xlab(&quot;&quot;) &#43; ylab(&quot;Daily Temperature&quot;) &#43; ggtitle(&quot;Temperature variation through the years in NYC&quot;)  There isn&rsquo;t a strong visible trend component, but there does seem to be a seasonal pattern.">
+
+
+<meta property="og:description" content="Time Series Analysis Apart from exploring the patterns of change in climate data we also wanted to predict and benchmark temperatures using several types of time series forecast models.
+Why time series forecasting?
+Because climate data is heavily time-dependent and has naturally temporal ordering, we can use previously observed values to predict future values
+We will try and predict temperatures in NYC
+Data Import
+ggplot(GlobalTemp_NYC[GlobalTemp_NYC$dt &gt;= as.Date(&quot;1950-01-01&quot;),] , aes(dt, AverageTemperature)) &#43; geom_line() &#43; xlab(&quot;&quot;) &#43; ylab(&quot;Daily Temperature&quot;) &#43; ggtitle(&quot;Temperature variation through the years in NYC&quot;)  There isn&rsquo;t a strong visible trend component, but there does seem to be a seasonal pattern.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Climate Change">
+<meta name="twitter:title" content="Climate Change">
+<meta property="og:url" content="/2019/06/climate-change/">
+<meta property="twitter:url" content="/2019/06/climate-change/">
+<meta property="og:site_name" content="Tanushree Nori&#39;s Blog">
+<meta property="og:description" content="Time Series Analysis Apart from exploring the patterns of change in climate data we also wanted to predict and benchmark temperatures using several types of time series forecast models.
+Why time series forecasting?
+Because climate data is heavily time-dependent and has naturally temporal ordering, we can use previously observed values to predict future values
+We will try and predict temperatures in NYC
+Data Import
+ggplot(GlobalTemp_NYC[GlobalTemp_NYC$dt &gt;= as.Date(&quot;1950-01-01&quot;),] , aes(dt, AverageTemperature)) &#43; geom_line() &#43; xlab(&quot;&quot;) &#43; ylab(&quot;Daily Temperature&quot;) &#43; ggtitle(&quot;Temperature variation through the years in NYC&quot;)  There isn&rsquo;t a strong visible trend component, but there does seem to be a seasonal pattern.">
+<meta name="twitter:description" content="Time Series Analysis Apart from exploring the patterns of change in climate data we also wanted to predict and benchmark temperatures using several types of time series forecast models.
+Why time series forecasting?
+Because climate data is heavily time-dependent and has naturally temporal ordering, we can use previously observed values to predict future values
+We will try and predict temperatures in NYC
+Data Import
+ggplot(GlobalTemp_NYC[GlobalTemp_NYC$dt &gt;= as.Date(&quot;1950-01-01&quot;),] , aes(dt, AverageTemperature)) &#43; geom_line() &#43; xlab(&quot;&quot;) &#43; ylab(&quot;Daily Temperature&quot;) &#43; ggtitle(&quot;Temperature variation through the years in NYC&quot;)  There isn&rsquo;t a strong visible trend component, but there does seem to be a seasonal pattern.">
+<meta property="og:locale" content="en-us">
+
+  
+    <meta property="article:published_time" content="2019-06-18T00:00:00">
+  
+  
+    <meta property="article:modified_time" content="2019-06-18T00:00:00">
+  
+  
+  
+    
+      <meta property="article:section" content="R">
+    
+  
+  
+    
+      <meta property="article:tag" content="Time Series">
+    
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+
+
+
+
+  <meta property="og:image" content="/img/Display.png">
+  <meta property="twitter:image" content="/img/Display.png">
+
+
+    <title>Climate Change</title>
+
+    <link rel="icon" href="/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="/2019/06/climate-change/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.css" integrity="sha256-vuXZ9LGmmwtjqFX1F+EKin1ThZMub58gKULUyf0qECk=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" integrity="sha256-SEa4XYAHihTcEP1f5gARTB2K26Uk8PsndQYHQC1f4jU=" crossorigin="anonymous" />
+    
+    
+    <link rel="stylesheet" href="/css/style-nnm2spxvve8onlujjlegkkytaehyadd4ksxc1hyzzq9a2wvtrgbljqyulomn.min.css" />
+    
+    
+      
+        <link rel="stylesheet"  href="/css/mystyle.css">
+      
+    
+
+    
+      
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="4">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="/">Tanushree Nori&#39;s Blog</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="/#about">
+    
+    
+    
+      
+        <img class="header-picture" src="/img/Display.png" alt="Author&#39;s picture" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="4">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="/#about">
+          <img class="sidebar-profile-picture" src="/img/Display.png" alt="Author&#39;s picture" />
+        </a>
+        <h4 class="sidebar-profile-name">Sai Tanushree Nori</h4>
+        
+          <h5 class="sidebar-profile-bio">A site with my Data Science hobby projects and things I am currently studying</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+      
+      <span class="sidebar-button-desc">Home</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/categories">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+      
+      <span class="sidebar-button-desc">Categories</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/archives">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+      
+      <span class="sidebar-button-desc">Archives</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/#about">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+      
+      <span class="sidebar-button-desc">About</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/NoriTanushree">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.linkedin.com/in/tanunori/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-linkedin"></i>
+      
+      <span class="sidebar-button-desc">Linkedin</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/index.xml">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+      
+      <span class="sidebar-button-desc">RSS</span>
+    </a>
+  </li>
+
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="4"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title" itemprop="headline">
+      Climate Change
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2019-06-18T00:00:00Z">
+        
+  
+  
+  
+  
+    18 June 2019
+  
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="/categories/r">R</a>
+    
+  
+
+  </div>
+
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              
+
+<h2 id="time-series-analysis">Time Series Analysis</h2>
+
+<hr />
+
+<p>Apart from exploring the patterns of change in climate data we also wanted to predict and benchmark temperatures using several types of time series forecast models.</p>
+
+<p>Why time series forecasting?</p>
+
+<p>Because climate data is heavily time-dependent and has naturally temporal ordering, we can use previously observed values to predict future values</p>
+
+<p>We will try and predict temperatures in NYC</p>
+
+<p>Data Import</p>
+
+<pre><code class="language-r">ggplot(GlobalTemp_NYC[GlobalTemp_NYC$dt &gt;= as.Date(&quot;1950-01-01&quot;),] , aes(dt, AverageTemperature)) + geom_line() + xlab(&quot;&quot;) + ylab(&quot;Daily Temperature&quot;) + ggtitle(&quot;Temperature variation through the years in NYC&quot;)
+</code></pre>
+
+<p><img src="/post/2019-06-21-time-series-climate-change-analysis_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+
+<p>There isn&rsquo;t a strong visible trend component, but there does seem to be a seasonal pattern.
+<br></p>
+
+<h3 id="can-we-discern-a-trend-in-the-data"><strong>Can we discern a trend in the data?</strong></h3>
+
+<pre><code class="language-r"># Group NYC data by year
+GlobalTemp_NYC_Year = GlobalTemp_NYC %&gt;% group_by(Year) %&gt;% summarise(AverageTemperatureYearly = mean(AverageTemperature,na.rm=T))
+
+# Add moving average column to the data frame
+GlobalTemp_NYC_Year = GlobalTemp_NYC_Year %&gt;% mutate(roll_ma = rollmean(AverageTemperatureYearly, k=5, fill=NA))
+</code></pre>
+
+<p><br></p>
+
+<pre><code class="language-r">ggplot(GlobalTemp_NYC_Year[GlobalTemp_NYC_Year$Year &gt;= 1900, ], aes(Year, AverageTemperatureYearly),size=2) + geom_line(position=position_jitter(1,3), pch=21, fill=&quot;#FF0000AA&quot;) + geom_line(aes(y=rollmean(roll_ma, 10, na.pad=TRUE), color=&quot;red&quot;)) + xlab(&quot;Years&quot;) + ylab(&quot;Yearly averages&quot;) + scale_x_continuous(breaks = pretty(GlobalTemp_NYC_Year[GlobalTemp_NYC_Year$Year &gt;= 1900, ]$Year,n=10)) + ggtitle(&quot;Yearly averages of temperatures in NYC &quot;)
+</code></pre>
+
+<p><img src="/post/2019-06-21-time-series-climate-change-analysis_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+
+<p>The rolling means of temperature over time do seem to be sloping upwards.</p>
+
+<h3 id="more-evidence-of-an-existing-trend-and-non-stationarity-component-albeit-not-statistically-proven-yet"><strong>More evidence of an existing trend and non-stationarity component ! (albeit not statistically proven yet)</strong></h3>
+
+<pre><code class="language-r"># Converts the dataset into a time series object
+# Split data into test and train 
+GlobalTemp_NYC_sub = dplyr::filter(GlobalTemp_NYC, Year &gt;= 1900 &amp; Year &lt;= 2010)
+Test = dplyr::filter(GlobalTemp_NYC, Year &gt; 2010)
+
+# Convert columns to ts() type
+GlobalTemp_NYC_sub$AverageTemperatureTS = ts(GlobalTemp_NYC_sub[,c('AverageTemperature')])
+Test$AverageTemperatureTS = ts(Test[,c('AverageTemperature')])
+
+# Calculate rolling mean with a 12 period window
+GlobalTemp_NYC_sub$cnt_ma = ma(GlobalTemp_NYC_sub$AverageTemperatureTS, order=12) 
+
+# Calculate rolling standard deviation
+GlobalTemp_NYC_sub$cnt_std =  rollapply(GlobalTemp_NYC_sub$cnt_ma, width = 60, FUN = sd, na.pad = TRUE)
+</code></pre>
+
+<p><em>Plots of rolling means and standard deviations over time</em></p>
+
+<pre><code class="language-r"># Moving average plot
+ggplot() +
+  geom_line(data = GlobalTemp_NYC_sub, aes(x = dt, y = cnt_ma,   colour = &quot;Yearly Moving Average&quot;))  + ylab('Temperature') + xlab('Date')
+
+# Rolling SD plot
+ggplot() +
+  geom_line(data = GlobalTemp_NYC_sub, aes(x = dt, y = cnt_std,   colour = &quot;Rolling Standard Deviation&quot;))  + ylab('Temperature') + xlab('Date')
+</code></pre>
+
+<p><img src="/post/2019-06-21-time-series-climate-change-analysis_files/figure-html/unnamed-chunk-7-1.png" width="50%" /><img src="/post/2019-06-21-time-series-climate-change-analysis_files/figure-html/unnamed-chunk-7-2.png" width="50%" /></p>
+
+<p>The data definitely does not look stationary. This is supported by both the rolling mean and standard deviation plots. The standard deviation has been considered over a 5 year rolling period window, the average of which does not look constant over time.</p>
+
+<p>We do have to verify the above trends statistically though.</p>
+
+<p>Let&rsquo;s analyse seasonality in the data. We expect climate data to be seasonal in nature</p>
+
+<pre><code class="language-r">ggplot(GlobalTemp_NYC[GlobalTemp_NYC$Year&gt;=1900,],aes(x=dt,y=AverageTemperature,colour=reorder(Month.String,-AverageTemperature,mean)))+
+  geom_point()+
+  geom_smooth(method=&quot;loess&quot;)+
+  labs(title=&quot;Average Temperatures by Month in New York&quot;,
+       x=&quot;Year&quot;,
+       y=&quot;Average Temperature&quot;,
+       colour=&quot;Month&quot;)
+</code></pre>
+
+<p><img src="/post/2019-06-21-time-series-climate-change-analysis_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+
+<p>Through the years we see that temperatures do stay around similar ranges within a month. We&rsquo;ll come back to seasonality in a bit.</p>
+
+<h4 id="time-series-decompostion"><strong>Time series decompostion:</strong></h4>
+
+<p>Time series data is decomposed into:</p>
+
+<ol>
+<li>Seasonal</li>
+<li>Trend</li>
+<li>Cycle</li>
+<li>Residual or error</li>
+</ol>
+
+<p>It&rsquo;s a useful abstraction and involves thinking of time series as a combination of the above components</p>
+
+<pre><code class="language-r"># Indicating a seasonality of 12
+count_ma = ts(GlobalTemp_NYC_sub$AverageTemperatureTS, frequency=12)
+# decompsing data,
+decomp = stl(count_ma, s.window=&quot;periodic&quot;)
+# removing seasonality for further modeling
+deseasonal_cnt &lt;- seasadj(decomp)
+#plot of components
+plot(decomp)
+</code></pre>
+
+<p><img src="/post/2019-06-21-time-series-climate-change-analysis_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+
+<p>We notice that based on the gray bars in each plot, the impact of trend on over-all variation in the data isn&rsquo;t very high. Seasonality on the other hand explains the variation in the data to a much greater extent.</p>
+
+<p>A closer look at seasonality as decomposed above:</p>
+
+<pre><code class="language-r">seasonplot(count_ma,year.labels=TRUE,col=rainbow(6), main=&quot;Seasonal plot colored by year&quot;)
+</code></pre>
+
+<p><img src="/post/2019-06-21-time-series-climate-change-analysis_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+
+<p>Yep, looks pretty seasonal</p>
+
+<h3 id="statistical-proof-of-stationarity-through-the-adf-test"><strong>Statistical proof of stationarity through the ADF test:</strong></h3>
+
+<p><em>Theory :</em> ADF procedure tests whether the change in Y can be explained by lagged value and a linear trend. If contribution of the lagged value to the change in Y is non-significant and there is a presence of a trend component, the series is non-stationary and null hypothesis will not be rejected.</p>
+
+<pre><code class="language-r">adf.test(deseasonal_cnt, alternative = &quot;stationary&quot;)
+</code></pre>
+
+<pre><code>## 
+##  Augmented Dickey-Fuller Test
+## 
+## data:  deseasonal_cnt
+## Dickey-Fuller = -10.319, Lag order = 10, p-value = 0.01
+## alternative hypothesis: stationary
+</code></pre>
+
+<ul>
+<li><p>The results indicate that the time series is in-fact, stationary which weakly translates to - mean and variance stay the same over time (Or, that the marginal distribution of the process does not change over time)</p></li>
+
+<li><p>This is counter-intuitive to the expectation that average temperature have risen over time (Does not disprove global warming though)</p></li>
+</ul>
+
+<p><br></p>
+
+<h4 id="a-look-at-the-acf-and-pacf-plots-of-the-raw-time-series-data">A look at the ACF and PACF plots of the raw time series data:</h4>
+
+<pre><code class="language-r">Acf(count_ma, main='')
+</code></pre>
+
+<p><img src="/post/2019-06-21-time-series-climate-change-analysis_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+
+<pre><code class="language-r">Pacf(count_ma, main='')
+</code></pre>
+
+<p><img src="/post/2019-06-21-time-series-climate-change-analysis_files/figure-html/unnamed-chunk-12-2.png" width="672" /></p>
+
+<ul>
+<li>Acf plot gives us values of auto-correlation of any series with its lagged values</li>
+<li>Pacf plot gives us the partial correlation coefficients between the series and lags of itself</li>
+</ul>
+
+<p><br></p>
+
+<h3 id="time-to-fit-our-models"><strong>Time to fit our Models!</strong></h3>
+
+<hr />
+
+<p>My baseline model will be a seasonal exponential smoothing model.</p>
+
+<p>Models to be used for selection and bench-marking:</p>
+
+<ol>
+<li>Naive seasonal exponential smoothing model</li>
+<li>ARIMA model</li>
+<li>SARIMA model with drift</li>
+</ol>
+
+<p><strong>Fitting models to the training data</strong></p>
+
+<pre><code class="language-r">#1 
+naive_fit = Arima(count_ma,order=c(0, 1, 1),
+            seasonal=list(order=c(0, 1, 1), period=12))
+
+#2
+fit = auto.arima(deseasonal_cnt, seasonal=FALSE)
+
+
+#3
+# Force the model to acknowlede the seasonality pattern with the Drift parameter set to 1
+fit_seasonal = auto.arima(count_ma,D=1)
+</code></pre>
+
+<h3 id="evaluate-results"><strong>Evaluate results!</strong></h3>
+
+<p><br></p>
+
+<h2 id="residuals-by-model-type-tabset-tabset-fade-tabset-pills">Residuals by model type {.tabset .tabset-fade .tabset-pills}</h2>
+
+<h3 id="residuals-for-baseline-model">Residuals for Baseline Model</h3>
+
+<pre><code class="language-r">tsdisplay(residuals(naive_fit), lag.max=45, main='Naive baseline model')
+</code></pre>
+
+<p><img src="/post/2019-06-21-time-series-climate-change-analysis_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+
+<h3 id="residuals-for-arima">Residuals for ARIMA</h3>
+
+<pre><code class="language-r">tsdisplay(residuals(fit), lag.max=45, main='ARIMA Model')
+</code></pre>
+
+<p><img src="/post/2019-06-21-time-series-climate-change-analysis_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+
+<h3 id="residuals-for-sarima-with-drift">Residuals for SARIMA with Drift</h3>
+
+<pre><code class="language-r">tsdisplay(residuals(fit_seasonal), lag.max=45, main='SARIMA Model')
+</code></pre>
+
+<p><img src="/post/2019-06-21-time-series-climate-change-analysis_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+
+<p><em>Some observations</em></p>
+
+<ul>
+<li><p>The only auto-correlations seem to be in the seasonal lags for the SARIMA model (12,24,36)</p></li>
+
+<li><p>ACF results from the baseline model do not seem to be dampening with time</p></li>
+</ul>
+
+<p><br></p>
+
+<p><strong>Compare MAEs from all the models</strong></p>
+
+<p><br></p>
+
+<ul>
+<li>MAE is mean(|et|)</li>
+<li>We pick MAE since it is easy to interpret and all the models use the same data (so no scaling issues)</li>
+<li>We forecast on our test data set with observations from 2011-2013</li>
+</ul>
+
+<pre><code class="language-r">Naive_MAE = accuracy(naive_fit, h=Test)[3]
+Arima_MAE = accuracy(fit, h=Test)[3]
+Sarima_MAE = accuracy(fit_seasonal, h=Test)[3]
+
+eval_frame = data.frame(Naive_MAE,Arima_MAE,Sarima_MAE)
+knitr::kable(eval_frame, caption = ' MAE across models' ) %&gt;% kable_styling()
+</code></pre>
+
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>Table 1:  MAE across models</caption>
+ <thead>
+  <tr>
+   <th style="text-align:right;"> Naive_MAE </th>
+   <th style="text-align:right;"> Arima_MAE </th>
+   <th style="text-align:right;"> Sarima_MAE </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 1.269324 </td>
+   <td style="text-align:right;"> 1.247306 </td>
+   <td style="text-align:right;"> 1.432573 </td>
+  </tr>
+</tbody>
+</table>
+
+<ul>
+<li>We see that MAE seems lowest for the baseline model (the irony!). But let&rsquo;s look at the forecasts too.</li>
+</ul>
+
+<p><br></p>
+
+<p><strong>Forecast using all the three models</strong></p>
+
+<pre><code class="language-r">Naive.Mean= as.data.frame(forecast(naive_fit, h=33)$mean)
+Arima.Mean= as.data.frame(forecast(fit, h=33)$mean)
+Sarima.Mean= as.data.frame(forecast(fit_seasonal, h=33)$mean)
+</code></pre>
+
+<p>Forecast from various models</p>
+
+<pre><code class="language-r">Test$dt = as.Date(Test$dt)
+cols=colnames(Test)
+Test = cbind(Test,Naive.Mean,Arima.Mean,Sarima.Mean)
+names(Test) = append(cols, c(&quot;naive&quot;,&quot;arima&quot;,&quot;sarima&quot;))
+
+ggplot() +
+  geom_line(data = Test, aes(x = dt, y = AverageTemperatureTS,color=&quot;Test Data&quot;),size=1)+ ylab('Temperature') + geom_line(data=Test, aes(x=dt,y=naive, color=&quot;Naive Baseline&quot;) ,size=1,linetype=&quot;dashed&quot;) + geom_line(data=Test, aes(x=dt,y=arima,color=&quot;ARIMA&quot;),linetype=&quot;solid&quot;,size =1) + geom_line(data=Test, aes(x=dt,y=sarima,color=&quot;SARIMA&quot;),size=1,linetype=&quot;dotted&quot;) +scale_color_manual(name = &quot;Colors&quot;, 
+                     values = c(&quot;Test Data&quot;=&quot;orange&quot;,&quot;Naive Baseline&quot; = &quot;red&quot;, &quot;ARIMA&quot; = &quot;darkgreen&quot;, &quot;SARIMA&quot;= &quot;blue&quot;))
+</code></pre>
+
+<p><img src="/post/2019-06-21-time-series-climate-change-analysis_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+
+<p>What we see here is the forecasts by each model against the Test data over 2011-2013 in Orange. The baseline doesn&rsquo;t seem to be much worse than the model that does take seasonality and differencing into account.</p>
+
+<p><style>
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "blue">
+Something kind of interesting can be highlighted here:</p>
+
+<ol>
+<li><p>Why does it seem like our Naive forecasts and ARIMA do just as well (Naive does better infact) than our seasonal forecast? Especially because Naive and ARIMA &ldquo;do not account for seasonality&rdquo;?</p>
+
+<ul>
+<li>The Naive method and the ARIMA are <em>perfectly good</em> for one-step ahead forecasts because the evident smoothness of seasonality means that knowing information from exactly one year ago gives little or no information about the next likely value than knowing just the last couple of observations.</li>
+</ul></li>
+
+<li><p>If we wished to forecast over a longer time frame - the next 4-5 years say, we would have to take seasonality into account. Since we only have a fixed 12 seasonal effects we can go ahead by estimating the seasonal effects. In that case, the SARIMA could out-perform</p></li>
+
+<li><p>But it is good to note that time series forecasts are not reliable over extended time periods and the models need to be re-run/refreshed routinely</p></li>
+</ol>
+
+<p></div></p>
+
+<p><br></p>
+
+<p><strong>An extrapolation of the seasonal model&rsquo;s fit</strong></p>
+
+<pre><code class="language-r">plot(forecast(fit_seasonal, 12), include=36)
+</code></pre>
+
+<p><img src="/post/2019-06-21-time-series-climate-change-analysis_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+
+<h4 id="next-steps">Next steps?</h4>
+
+<p>Use forecast package to create Fourier terms to use as covariates. This can lead to a more precise modeling of seasonal information.</p>
+
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">TAGGED IN</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="/tags/time-series/">Time Series</a>
+
+                  </div>
+                
+              
+            
+            <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=/2019/06/climate-change/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=/2019/06/climate-change/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=/2019/06/climate-change/">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        
+      
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+            
+              
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2019 Sai Tanushree Nori. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+        <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=/2019/06/climate-change/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=/2019/06/climate-change/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=/2019/06/climate-change/">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        
+      
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+  <i id="btn-close-shareoptions" class="fa fa-close"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=%2F2019%2F06%2Fclimate-change%2F">
+          <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=%2F2019%2F06%2Fclimate-change%2F">
+          <i class="fa fa-twitter"></i><span>Share on Twitter</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=%2F2019%2F06%2Fclimate-change%2F">
+          <i class="fa fa-google-plus"></i><span>Share on Google&#43;</span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-remove"></i>
+    </div>
+    
+      <img id="about-card-picture" src="/img/Display.png" alt="Author&#39;s picture" />
+    
+    <h4 id="about-card-name">Sai Tanushree Nori</h4>
+    
+      <div id="about-card-bio">A site with my Data Science hobby projects and things I am currently studying</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        Data Scientist
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker"></i>
+        <br/>
+        USA
+      </div>
+    
+  </div>
+</div>
+
+    <div id="algolia-search-modal" class="modal-container">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="close-button"><i class="fa fa-close"></i></span>
+      <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+        <span class="searchby-algolia-text text-color-light text-small">by</span>
+        <img class="searchby-algolia-logo" src="https://www.algolia.com/static_assets/images/press/downloads/algolia-light.svg">
+      </a>
+      <i class="search-icon fa fa-search"></i>
+      <form id="algolia-search-form">
+        <input type="text" id="algolia-search-input" name="search"
+          class="form-control input--large search-input" placeholder="Search" />
+      </form>
+    </div>
+    <div class="modal-body">
+      <div class="no-result text-color-light text-center">no post found</div>
+      <div class="results">
+        
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="/2019/06/climate-change/">
+                <h3 class="media-heading">Climate Change</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jun 6, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">Time Series Analysis Apart from exploring the patterns of change in climate data we also wanted to predict and benchmark temperatures using several types of time series forecast models.
+Why time series forecasting?
+Because climate data is heavily time-dependent and has naturally temporal ordering, we can use previously observed values to predict future values
+We will try and predict temperatures in NYC
+Data Import
+ggplot(GlobalTemp_NYC[GlobalTemp_NYC$dt &gt;= as.Date(&quot;1950-01-01&quot;),] , aes(dt, AverageTemperature)) + geom_line() + xlab(&quot;&quot;) + ylab(&quot;Daily Temperature&quot;) + ggtitle(&quot;Temperature variation through the years in NYC&quot;)  There isn&rsquo;t a strong visible trend component, but there does seem to be a seasonal pattern.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+      </div>
+    </div>
+    <div class="modal-footer">
+      <p class="results-count text-medium"
+         data-message-zero="no post found"
+         data-message-one="1 post found"
+         data-message-other="{n} posts found">
+         1 posts found
+      </p>
+    </div>
+  </div>
+</div>
+    
+  
+    
+    <div id="cover" style="background-image:url('https://res.cloudinary.com/djwkxxfsw/image/upload/v1560665642/cover3_zyxhpd.jpg');"></div>
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js" integrity="sha256-GEAnjcTqVP+vBp3SSc8bEDQqvWAZMiHyUSIorrWwH50=" crossorigin="anonymous"></script>
+
+
+<script src="/js/script-qi9wbxp2ya2j6p7wx1i6tgavftewndznf4v0hy2gvivk1rxgc3lm7njqb6bz.min.js"></script>
+
+
+<script lang="javascript">
+window.onload = updateMinWidth;
+window.onresize = updateMinWidth;
+document.getElementById("sidebar").addEventListener("transitionend", updateMinWidth);
+function updateMinWidth() {
+  var sidebar = document.getElementById("sidebar");
+  var main = document.getElementById("main");
+  main.style.minWidth = "";
+  var w1 = getComputedStyle(main).getPropertyValue("min-width");
+  var w2 = getComputedStyle(sidebar).getPropertyValue("width");
+  var w3 = getComputedStyle(sidebar).getPropertyValue("left");
+  main.style.minWidth = `calc(${w1} - ${w2} - ${w3})`;
+}
+</script>
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+  
+    
+  
+
+
+
+
+    
+  </body>
+</html>
+
