@@ -5,7 +5,7 @@ date: '2019-06-21'
 slug: climate-trial
 categories: []
 tags: []
-summary: An analysis of climate date using different time series methodologies
+summary: An analysis of climate data using different time series methodologies
 keywords:
   - tech
 ---
