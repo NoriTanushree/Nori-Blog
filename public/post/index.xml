@@ -12,17 +12,12 @@
     
     
     <item>
-      <title>Climate Trial</title>
+      <title>Time Series Analysis of Climate Change</title>
       <link>/2019/06/climate-trial/</link>
       <pubDate>Fri, 21 Jun 2019 00:00:00 +0000</pubDate>
       
       <guid>/2019/06/climate-trial/</guid>
-      <description>Time Series Analysis Apart from exploring the patterns of change in climate data we also wanted to predict and benchmark temperatures using several types of time series forecast models.
-Why time series forecasting?
-Because climate data is heavily time-dependent and has naturally temporal ordering, we can use previously observed values to predict future values
-We will try and predict temperatures in NYC
-Data Import
-ggplot(GlobalTemp_NYC[GlobalTemp_NYC$dt &amp;gt;= as.Date(&amp;quot;1950-01-01&amp;quot;),] , aes(dt, AverageTemperature)) + geom_line() + xlab(&amp;quot;&amp;quot;) + ylab(&amp;quot;Daily Temperature&amp;quot;) + ggtitle(&amp;quot;Temperature variation through the years in NYC&amp;quot;)  There isn&amp;rsquo;t a strong visible trend component, but there does seem to be a seasonal pattern.</description>
+      <description>An analysis of climate date using different time series methodologies</description>
     </item>
     
   </channel>
