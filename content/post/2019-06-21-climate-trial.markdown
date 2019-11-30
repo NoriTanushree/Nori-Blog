@@ -20,17 +20,23 @@ keywords:
 ##  Time Series Analysis
 
 ***
-Apart from exploring the patterns of change in climate data we also wanted to predict and benchmark temperatures using several types of time series forecast models. 
+The aim of this analysis is to predict and benchmark temperatures using several types of time series forecast models. 
 
-Why time series forecasting?
+Source of the data used for the analysis is - https://www.kaggle.com/berkeleyearth/climate-change-earth-surface-temperature-data
+
+Some details about the datasets:  
+
+*It dates from 1750 to 2013 for average land temperature and 1850 to 2013 for max and min land temperatures and global ocean and land temperatures
+
+*The dataset I chose for the analysis is the Global Land Temperarures by City. I picked NYC to explore and analyse.
+
+Why time series forecasting though?
 
 Because climate data is heavily time-dependent and has naturally temporal ordering, we can use previously observed values to predict future values
 
 We will try and predict temperatures in NYC
 
 Data Import
-
-
 
 
 ```r

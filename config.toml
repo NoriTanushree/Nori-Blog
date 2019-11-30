@@ -86,6 +86,12 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
   name = "Linkedin"
   pre = "<i class=\"sidebar-button-icon fa fa-lg fa-linkedin\"></i>"
   url = "https://www.linkedin.com/in/tanunori/"
+[[menu.links]]
+  weight = 3
+  identifier = "Resume"
+  name = "Resume"
+  pre = "<i class=\"sidebar-button-icon fa fa-lg fa-file\"></i>"
+  url = "https://www.github.com/NoriTanushree/Latest-Resume/blob/master/Resume.pdf"
 
 [[menu.misc]]
   weight = 1
